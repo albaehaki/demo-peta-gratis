@@ -4,7 +4,9 @@ Satu file HTML, tanpa API key, tanpa billing. Demo ini menunjukkan cara membuat 
 aplikasi kebugaran berbasis peta (mirip Strava) memakai tumpukan gratis:
 
 - **Leaflet 1.9.4** (BSD-2) untuk render peta
-- **Tile OpenStreetMap / CARTO / CyclOSM / OpenTopoMap / Esri** — ganti lapisan lewat ikon kanan atas
+- **Tile OpenStreetMap** jadi basemap default (tanpa API key). Layer "Gelap (OSM)" memakai tile OSM
+  yang sama tapi dibalik warnanya lewat CSS filter, jadi tampilan gelap tetap bisa tanpa key
+- Lapisan lain yang bisa dipilih: CARTO (kini **perlu API key**), CyclOSM, OpenTopoMap, Esri World Imagery
 - Track GPS digambar sendiri dengan rumus **haversine**, diwarnai sesuai kecepatan
 - **Animasi replay** seperti Strava (garis muka bergerak mengikuti track)
 - **Tarik & lepas file .gpx / .tcx** untuk memakai track sendiri (parsing + hitung ulang semua statistik)

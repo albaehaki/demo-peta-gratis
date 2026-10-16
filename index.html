@@ -82,6 +82,8 @@
   footer{margin-top:26px;color:var(--muted);font-size:12px;border-top:1px solid var(--line);padding-top:14px}
   .leaflet-control-attribution{background:rgba(10,14,18,.82)!important;color:#9aa8ba!important}
   .leaflet-control-attribution a{color:#2fd3a5!important}
+  /* Basemap gelap tanpa API key: tile OSM standar dibalik warnanya lewat CSS */
+  .leaflet-tile-pane .tile-dark{filter:invert(1) hue-rotate(180deg) brightness(.92) contrast(.92) saturate(.85)}
   @media(max-width:900px){
     .grid{grid-template-columns:1fr}
     #map{height:60vh;min-height:340px}
@@ -153,7 +155,7 @@
       <thead><tr><th>Layanan</th><th>Gratis sampai</th><th>API key</th><th>Dipakai untuk</th><th>Catatan</th></tr></thead>
       <tbody>
         <tr><td class="k">Leaflet + tile OpenStreetMap</td><td>tanpa batas resmi (server komunitas)</td><td class="n">tidak</td><td>Basemap raster, MVP, prototipe</td><td>Wajib atribusi &copy; OpenStreetMap. Server OSM bukan CDN — jangan dipakai trafik besar.</td></tr>
-        <tr><td class="k">CARTO basemaps</td><td>gratis untuk proyek open data</td><td class="n">tidak (ada fair use)</td><td>Basemap gelap/terang yang enak dilihat</td><td>Style Positron/Voyager/Dark Matter — hasilnya langsung "kelihatan mahal".</td></tr>
+        <tr><td class="k">CARTO basemaps</td><td>perlu API key (sejak 2026 basemap-nya menolak tanpa key)</td><td class="n">ya</td><td>Basemap gelap/terang yang enak dilihat</td><td>Style Positron/Voyager/Dark Matter — paling "kelihatan mahal". Kalau tidak ada key, tile-nya muncul watermark API KEY REQUIRED.</td></tr>
         <tr><td class="k">CyclOSM</td><td>gratis</td><td class="n">tidak</td><td>Peta khusus sepeda</td><td>Bagus buat app gowes.</td></tr>
         <tr><td class="k">OpenTopoMap</td><td>gratis (fair use)</td><td class="n">tidak</td><td>Peta topografi / hiking</td><td>Kontur elevasi, cocok fitur trail running.</td></tr>
         <tr><td class="k">OpenFreeMap</td><td>gratis, tanpa batas iklan</td><td class="n">tidak</td><td>Basemap vektor (MapLibre)</td><td>Style Liberty/Positron siap pakai, bisa di-self-host.</td></tr>
@@ -236,15 +238,16 @@ const SAMPLE = {"name":"Lari sore \u2014 loop Teluk Pucung (contoh)","type":"Run
 
 /* ============ PETA ============ */
 const base = {
-  "Gelap (CARTO)": L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors &copy; CARTO'}),
-  "Terang (CARTO)": L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors &copy; CARTO'}),
+  "Gelap (OSM)": L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,className:'tile-dark',attribution:'&copy; OpenStreetMap contributors'}),
   "OpenStreetMap": L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}),
+  "Gelap (CARTO · perlu API key)": L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors &copy; CARTO'}),
+  "Terang (CARTO · perlu API key)": L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors &copy; CARTO'}),
   "CyclOSM (sepeda)": L.tileLayer('https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors, CyclOSM'}),
   "Topografi": L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{maxZoom:17,attribution:'&copy; OpenStreetMap contributors, SRTM | &copy; OpenTopoMap'}),
   "Satelit (Esri)": L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Tiles &copy; Esri'})
 };
 const map = L.map('map',{zoomControl:true,preferCanvas:true,worldCopyJump:true}).setView([-6.2161,107.0283],14);
-base["Gelap (CARTO)"].addTo(map);
+base["Gelap (OSM)"].addTo(map);
 L.control.layers(base,null,{position:'topright'}).addTo(map);
 const renderer = L.canvas({padding:0.35});
 const layerTrack = L.layerGroup().addTo(map);
